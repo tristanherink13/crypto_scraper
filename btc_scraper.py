@@ -52,10 +52,9 @@ now_datetime = datetime.datetime.strptime(now_string, "%Y-%m-%d %H:%M:%S")
 url = 'https://cryptowat.ch'
 response = requests.get(url, verify=False)
 soup = BeautifulSoup(response.text, 'lxml')
-prices = soup.find_all(class_ = 'price')
-percent_changes = soup.find_all(class_ = 'color-short')
-btc_price = prices[1].text
-btc_percent_change = percent_changes[1].text
+btc = soup.find(title = 'Coinbase Pro BTC/USD')
+btc_price = btc.find(class_ = 'price').text.replace(',', '')
+btc_percent_change = btc.find(class_ = 'color-long').text
 
 # create notification flags
 percent_float = float(btc_percent_change.replace('-', '').replace('%', ''))
