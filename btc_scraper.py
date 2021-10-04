@@ -53,8 +53,16 @@ url = 'https://cryptowat.ch'
 response = requests.get(url, verify=False)
 soup = BeautifulSoup(response.text, 'lxml')
 btc = soup.find(title = 'Coinbase Pro BTC/USD')
-btc_price = btc.find(class_ = 'price').text.replace(',', '')
-btc_percent_change = btc.find(class_ = 'color-long').text
+# account for dynamic HTML changes
+try:
+    btc_price = btc.find(class_ = 'price').text.replace(',', '')
+except:
+    btc_price = btc.find(class_ = 'price color-short').text.replace(',', '')
+
+try:
+    btc_percent_change = btc.find(class_ = 'color-long').text
+except:
+    btc_percent_change = btc.find(class_ = 'color-short').text
 
 # create notification flags
 percent_float = float(btc_percent_change.replace('-', '').replace('%', ''))
